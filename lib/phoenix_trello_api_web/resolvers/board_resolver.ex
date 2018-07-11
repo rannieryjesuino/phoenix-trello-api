@@ -17,7 +17,8 @@ defmodule PhoenixTrelloApiWeb.BoardResolver do
   end
 
   def update_board(_root, args, _info) do
-    case Trello.update_board(args) do
+    board = Trello.get_board!(args.id)
+    case Trello.update_board(board, args) do
       {:ok, board} ->
         {:ok, board}
       _error ->

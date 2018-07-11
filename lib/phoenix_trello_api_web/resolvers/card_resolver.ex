@@ -5,7 +5,7 @@ defmodule PhoenixTrelloApiWeb.CardResolver do
 
   def all_cards(_root, _args, _info) do
     cards = Trello.list_cards()
-    {:ok, lists}
+    {:ok, cards}
   end
 
   def create_card(_root, args, _info) do
@@ -18,7 +18,8 @@ defmodule PhoenixTrelloApiWeb.CardResolver do
   end
 
   def update_card(_root, args, _info) do
-    case Trello.update_card(args) do
+    card = Trello.get_card!(args.id)
+    case Trello.update_card(card, args) do
       {:ok, card} ->
         {:ok, card}
       _error ->

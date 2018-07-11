@@ -1,7 +1,7 @@
 defmodule PhoenixTrelloApiWeb.Schema do
   use Absinthe.Schema
 
-  alias PhoenixTrelloApiWeb.{ListResolver,BoardResolver}
+  alias PhoenixTrelloApiWeb.{CardResolver, ListResolver, BoardResolver}
 
   object :board do
     field :id, non_null(:id)
@@ -18,7 +18,7 @@ defmodule PhoenixTrelloApiWeb.Schema do
   object :card do
     field :id, non_null(:id)
     field :name, non_null(:string)
-    field :desc, :text
+    field :desc, :string
     field :list_id, non_null(:integer)
   end
 
@@ -30,6 +30,7 @@ defmodule PhoenixTrelloApiWeb.Schema do
     end
 
     field :update_board, :board do
+      arg :id, non_null(:integer)
       arg :name, non_null(:string)
 
       resolve &BoardResolver.update_board/3
@@ -63,7 +64,7 @@ defmodule PhoenixTrelloApiWeb.Schema do
 
     field :create_card, :card do
       arg :name, non_null(:string)
-      arg :desc, :text
+      arg :desc, :string
       arg :list_id, non_null(:integer)
 
       resolve &CardResolver.create_card/3
@@ -71,7 +72,7 @@ defmodule PhoenixTrelloApiWeb.Schema do
 
     field :update_card, :card do
       arg :name, non_null(:string)
-      arg :desc, :text
+      arg :desc, :string
       arg :list_id, non_null(:integer)
 
       resolve &CardResolver.create_card/3

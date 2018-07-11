@@ -19,7 +19,8 @@ defmodule PhoenixTrelloApiWeb.ListResolver do
   end
 
   def update_list(_root, args, _info) do
-    case Trello.update_list(args) do
+    list = Trello.get_list!(args.id)
+    case Trello.update_list(list, args) do
       {:ok, list} ->
         {:ok, list}
       _error ->
