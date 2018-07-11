@@ -16,4 +16,17 @@ defmodule PhoenixTrelloApiWeb.BoardResolver do
     end
   end
 
+  def update_board(_root, args, _info) do
+    case Trello.update_board(args) do
+      {:ok, board} ->
+        {:ok, board}
+      _error ->
+        {:error, "could not update board"}
+    end
+  end
+
+  def delete_board(_root, args, _info) do
+    Trello.delete_board(args)
+  end
+
 end
