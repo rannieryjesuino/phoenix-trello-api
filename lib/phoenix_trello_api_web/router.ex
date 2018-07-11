@@ -20,6 +20,16 @@ defmodule PhoenixTrelloApiWeb.Router do
   # end
 
   # Other scopes may use custom stacks.
+
+  scope "/" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: PhoenixTrelloApiWeb.Schema,
+      interface: :simple,
+      context: %{pubsub: PhoenixTrelloApiWeb.Endpoint}
+  end
+
   scope "/api", PhoenixTrelloApiWeb do
     pipe_through :api
 

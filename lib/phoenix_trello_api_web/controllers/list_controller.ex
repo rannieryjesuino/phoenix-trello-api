@@ -3,7 +3,6 @@ defmodule PhoenixTrelloApiWeb.ListController do
 
   alias PhoenixTrelloApi.Trello
   alias PhoenixTrelloApi.Trello.List
-  alias PhoenixTrelloApi.Repo
 
 
   action_fallback PhoenixTrelloApiWeb.FallbackController
