@@ -12,7 +12,14 @@ defmodule PhoenixTrelloApiWeb.Schema do
   object :list do
     field :id, non_null(:id)
     field :name, non_null(:string)
-    field :quadro, :board
+    field :board_id, non_null(:integer)
+  end
+
+  object :card do
+    field :id, non_null(:id)
+    field :name, non_null(:string)
+    field :desc, :text
+    field :list_id, non_null(:integer)
   end
 
   mutation do
@@ -29,33 +36,51 @@ defmodule PhoenixTrelloApiWeb.Schema do
     end
 
     field :delete_board, :board do
-      arg :name, non_null(:string)
+      arg :id, non_null(:integer)
 
       resolve &BoardResolver.delete_board/3
     end
 
-    field :create_list, :board do
+    field :create_list, :list do
       arg :name, non_null(:string)
+      arg :board_id, non_null(:integer)
 
       resolve &ListResolver.create_list/3
     end
 
-    field :update_list, :board do
+    field :update_list, :list do
       arg :name, non_null(:string)
+      arg :board_id, non_null(:integer)
 
       resolve &ListResolver.update_list/3
     end
 
-    field :delete_list, :board do
-      arg :name, non_null(:string)
+    field :delete_list, :list do
+      arg :id, non_null(:integer)
 
       resolve &ListResolver.delete_list/3
     end
 
-    field :create_card, :board do
+    field :create_card, :card do
       arg :name, non_null(:string)
+      arg :desc, :text
+      arg :list_id, non_null(:integer)
 
       resolve &CardResolver.create_card/3
+    end
+
+    field :update_card, :card do
+      arg :name, non_null(:string)
+      arg :desc, :text
+      arg :list_id, non_null(:integer)
+
+      resolve &CardResolver.create_card/3
+    end
+
+    field :delete_card, :card do
+      arg :id, non_null(:integer)
+
+      resolve &CardResolver.delete_card/3
     end
   end
 
@@ -67,6 +92,10 @@ defmodule PhoenixTrelloApiWeb.Schema do
 
     field :all_lists, non_null(list_of(non_null(:list))) do
       resolve &ListResolver.all_lists/3
+    end
+
+    field :all_cards, non_null(list_of(non_null(:card))) do
+      resolve &CardResolver.all_cards/3
     end
   end
 end
