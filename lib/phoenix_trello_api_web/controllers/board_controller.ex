@@ -13,9 +13,6 @@ defmodule PhoenixTrelloApiWeb.BoardController do
 
   def create(conn, %{"board" => board_params}) do
     with {:ok, %Board{} = board} <- Trello.create_board(board_params) do
-      Trello.create_list(%{name: "To Do", board_id: board.id})
-      Trello.create_list(%{name: "Doing", board_id: board.id})
-      Trello.create_list(%{name: "Done", board_id: board.id})
       conn
       |> put_status(:created)
       |> put_resp_header("location", board_path(conn, :show, board))
