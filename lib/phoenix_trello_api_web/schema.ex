@@ -50,6 +50,7 @@ defmodule PhoenixTrelloApiWeb.Schema do
     end
 
     field :update_list, :list do
+      arg :id, non_null(:integer)
       arg :name, non_null(:string)
       arg :board_id, non_null(:integer)
 
@@ -58,6 +59,7 @@ defmodule PhoenixTrelloApiWeb.Schema do
 
     field :delete_list, :list do
       arg :id, non_null(:integer)
+      arg :target_id, :integer
 
       resolve &ListResolver.delete_list/3
     end
@@ -71,11 +73,12 @@ defmodule PhoenixTrelloApiWeb.Schema do
     end
 
     field :update_card, :card do
-      arg :name, non_null(:string)
+      arg :id, non_null(:integer)
+      arg :name, :string
       arg :desc, :string
       arg :list_id, non_null(:integer)
 
-      resolve &CardResolver.create_card/3
+      resolve &CardResolver.update_card/3
     end
 
     field :delete_card, :card do

@@ -4,6 +4,7 @@ defmodule PhoenixTrelloApi.Trello do
   """
 
   import Ecto.Query, warn: false
+  import Ecto, warn: false
   alias PhoenixTrelloApi.Repo
 
   alias PhoenixTrelloApi.Trello.Board
@@ -53,9 +54,20 @@ defmodule PhoenixTrelloApi.Trello do
 
   """
   def create_board(attrs \\ %{}) do
-    %Board{}
+    {status, board} = %Board{}
     |> Board.changeset(attrs)
     |> Repo.insert()
+
+    if status == :ok do
+      Ecto.build_assoc(board, :lists, name: "To Do")
+      |> Repo.insert!()
+      Ecto.build_assoc(board, :lists, name: "Doing")
+      |> Repo.insert!()
+      Ecto.build_assoc(board, :lists, name: "Done")
+      |> Repo.insert!()
+    end
+
+    {status, board}
   end
 
   @doc """
@@ -166,9 +178,13 @@ defmodule PhoenixTrelloApi.Trello do
 
   """
   def update_list(%List{} = list, attrs) do
-    list
-    |> List.changeset(attrs)
-    |> Repo.update()
+    if attrs.board_id != list.board_id do
+      {:error, "Board diferente da lista original!"}
+    else
+      list
+      |> List.changeset(attrs)
+      |> Repo.update()
+    end
   end
 
   @doc """
@@ -183,6 +199,21 @@ defmodule PhoenixTrelloApi.Trello do
       {:error, %Ecto.Changeset{}}
 
   """
+
+  def delete_list(%List{} = list, target_id) do
+    list = Repo.preload(list, :cards)
+
+    move_cards(list.cards, target_id)
+
+    Repo.delete(list)
+  end
+
+  defp move_cards(cards, target_id) do
+    for card <- cards do
+      update_card(card, %{list_id: target_id})
+    end
+  end
+
   def delete_list(%List{} = list) do
     Repo.delete(list)
   end
@@ -272,11 +303,21 @@ defmodule PhoenixTrelloApi.Trello do
 
   """
   def update_card(%Card{} = card, attrs) do
-    card
-    |> Card.changeset(attrs)
-    |> Repo.update()
+    if get_lists_board(card.list_id) != get_lists_board(attrs.list_id) do
+      {:error, "Board da lista destino e diferente"}
+    else
+      card
+      |> Card.changeset(attrs)
+      |> Repo.update()
+    end
+
   end
 
+  def get_lists_board(list_id) do
+    list = Repo.get!(List, list_id)
+    query = from board in Board, where: ^list.board_id == board.id
+    board = Repo.one(query)
+  end
   @doc """
   Deletes a Card.
 

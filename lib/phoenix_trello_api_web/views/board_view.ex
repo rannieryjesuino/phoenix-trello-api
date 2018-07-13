@@ -1,6 +1,6 @@
 defmodule PhoenixTrelloApiWeb.BoardView do
   use PhoenixTrelloApiWeb, :view
-  alias PhoenixTrelloApiWeb.BoardView
+  alias PhoenixTrelloApiWeb.BoardView, warn: false
 
   def render("index.json", %{boards: boards}) do
     %{data: render_many(boards, BoardView, "board.json")}

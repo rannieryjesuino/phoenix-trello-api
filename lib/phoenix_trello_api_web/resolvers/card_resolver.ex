@@ -22,13 +22,16 @@ defmodule PhoenixTrelloApiWeb.CardResolver do
     case Trello.update_card(card, args) do
       {:ok, card} ->
         {:ok, card}
+      {:error, reason} ->
+        {:error, reason}
       _error ->
         {:error, "could not update card"}
     end
   end
 
   def delete_card(_root, args, _info) do
-    Trello.delete_card(args)
+    card = Trello.get_card!(args.id)
+    Trello.delete_card(card)
   end
 
 end

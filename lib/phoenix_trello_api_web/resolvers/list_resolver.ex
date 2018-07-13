@@ -29,7 +29,12 @@ defmodule PhoenixTrelloApiWeb.ListResolver do
   end
 
   def delete_list(_root, args, _info) do
-    Trello.delete_list(args)
+    list = Trello.get_list!(args.id)
+    if args.target_id do
+      Trello.delete_list(list, args.target_id)
+    else
+      Trello.delete_list(list)
+    end
   end
 
 end

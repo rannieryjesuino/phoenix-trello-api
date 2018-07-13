@@ -27,7 +27,8 @@ defmodule PhoenixTrelloApiWeb.BoardResolver do
   end
 
   def delete_board(_root, args, _info) do
-    Trello.delete_board(args)
+    board = Trello.get_board!(args.id)
+    Trello.delete_board(board)
   end
 
 end

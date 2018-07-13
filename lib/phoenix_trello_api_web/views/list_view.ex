@@ -1,6 +1,6 @@
 defmodule PhoenixTrelloApiWeb.ListView do
   use PhoenixTrelloApiWeb, :view
-  alias PhoenixTrelloApiWeb.ListView
+  alias PhoenixTrelloApiWeb.ListView, warn: false
 
   def render("index.json", %{lists: lists}) do
     Enum.map(lists, fn list ->

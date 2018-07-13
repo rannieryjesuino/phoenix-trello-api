@@ -1,6 +1,6 @@
 defmodule PhoenixTrelloApiWeb.CardView do
   use PhoenixTrelloApiWeb, :view
-  alias PhoenixTrelloApiWeb.CardView
+  alias PhoenixTrelloApiWeb.CardView, warn: false
 
   def render("index.json", %{cards: cards}) do
     Enum.map(cards, fn card ->
