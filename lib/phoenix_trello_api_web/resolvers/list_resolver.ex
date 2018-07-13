@@ -13,6 +13,12 @@ defmodule PhoenixTrelloApiWeb.ListResolver do
     case Trello.create_list(args) do
       {:ok, list} ->
         {:ok, list}
+      {:error, changeset} ->
+        {
+          :error,
+          message: "could not create list",
+          details: Trello.error_details(changeset)
+        }
       _error ->
         {:error, "could not create list"}
     end
@@ -23,6 +29,12 @@ defmodule PhoenixTrelloApiWeb.ListResolver do
     case Trello.update_list(list, args) do
       {:ok, list} ->
         {:ok, list}
+      {:error, changeset} ->
+        {
+          :error,
+          message: "could not update list",
+          details: Trello.error_details(changeset)
+        }
       _error ->
         {:error, "could not update list"}
     end

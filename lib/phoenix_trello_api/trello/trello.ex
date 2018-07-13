@@ -20,6 +20,12 @@ defmodule PhoenixTrelloApi.Trello do
       [%Board{}, ...]
 
   """
+
+  def error_details(changeset) do
+    changeset
+    |> Ecto.Changeset.traverse_errors(fn {msg, _} -> msg end)
+ end
+
   def list_boards do
     Repo.all(Board)
     |> Repo.preload(:lists)

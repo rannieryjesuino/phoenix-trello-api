@@ -11,6 +11,12 @@ defmodule PhoenixTrelloApiWeb.BoardResolver do
     case Trello.create_board(args) do
       {:ok, board} ->
         {:ok, board}
+      {:error, changeset} ->
+        {
+          :error,
+          message: "could not create board",
+          details: Trello.error_details(changeset)
+        }
       _error ->
         {:error, "could not create board"}
     end
@@ -21,6 +27,12 @@ defmodule PhoenixTrelloApiWeb.BoardResolver do
     case Trello.update_board(board, args) do
       {:ok, board} ->
         {:ok, board}
+      {:error, changeset} ->
+        {
+          :error,
+          message: "could not update board",
+          details: Trello.error_details(changeset)
+        }
       _error ->
         {:error, "could not update board"}
     end

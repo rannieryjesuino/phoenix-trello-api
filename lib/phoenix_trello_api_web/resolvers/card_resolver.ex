@@ -12,6 +12,12 @@ defmodule PhoenixTrelloApiWeb.CardResolver do
     case Trello.create_card(args) do
       {:ok, card} ->
         {:ok, card}
+      {:error, changeset} ->
+        {
+          :error,
+          message: "could not create card",
+          details: Trello.error_details(changeset)
+        }
       _error ->
         {:error, "could not create card"}
     end
@@ -24,6 +30,12 @@ defmodule PhoenixTrelloApiWeb.CardResolver do
         {:ok, card}
       {:error, reason} ->
         {:error, reason}
+      {:error, changeset} ->
+        {
+          :error,
+          message: "could not update card",
+          details: Trello.error_details(changeset)
+        }
       _error ->
         {:error, "could not update card"}
     end
